@@ -1,0 +1,121 @@
+---
+const statusPageUrl = "https://status.tikvite.org";
+---
+
+<div class="status-board term-output" data-status-board>
+  <p class="term-output__lead status-board__loading" data-status-lead>
+    <span class="status-board__prompt"># </span>Loading <code>status.tikvite.org</code> …
+  </p>
+  <ul class="status-monitors" data-status-list hidden></ul>
+  <p class="status-board__error" data-status-error hidden></p>
+  <p class="status-board__meta" data-status-meta hidden></p>
+</div>
+
+<p class="status-board__hint">
+  Live data from <a href={statusPageUrl} target="_blank" rel="noreferrer">status.tikvite.org</a> · refreshes every minute
+</p>
+
+<script define:vars={{ statusPageUrl }}>
+  const POLL_MS = 60_000;
+
+  /** @param {number} t */
+  function relTime(t) {
+    if (t == null || Number.isNaN(t)) return "—";
+    const s = Math.floor((Date.now() - t) / 1000);
+    if (s < 120) return `${s}s ago`;
+    const m = Math.floor(s / 60);
+    if (m < 120) return `${m}m ago`;
+    return `${Math.floor(m / 60)}h ago`;
+  }
+
+  /** @param {import('../lib/statusPage').StatusMonitorRow} row */
+  function rowHtml(row) {
+    const lc = row.lastCheck;
+    const up = lc?.operational && !lc?.degraded;
+    const deg = lc?.degraded;
+    let pillClass = "status-pill status-pill--nodata";
+    let pillText = "no data";
+    if (lc) {
+      if (up) {
+        pillClass = "status-pill status-pill--up";
+        pillText = "operational";
+      } else if (deg) {
+        pillClass = "status-pill status-pill--degraded";
+        pillText = "degraded";
+      } else {
+        pillClass = "status-pill status-pill--down";
+        pillText = "down";
+      }
+    }
+    const nameInner = row.linkable
+      ? `<a href="${row.url}" target="_blank" rel="noreferrer">${escapeHtml(row.name)}</a>`
+      : escapeHtml(row.name);
+    const ms = lc ? `${lc.responseTimeMs} ms` : "—";
+    const when = lc ? relTime(lc.checkedAt) : "—";
+    const http = lc ? `${lc.status} ${escapeHtml(lc.statusText)}` : "—";
+    return `<li class="status-monitors__row">
+      <div class="status-monitors__name">
+        <span class="status-monitors__group">${escapeHtml(row.group)}</span>
+        <span class="status-monitors__title">${nameInner}</span>
+      </div>
+      <span class="${pillClass}">${pillText}</span>
+      <span class="status-monitors__http mono">${http}</span>
+      <span class="status-monitors__ms mono">${ms}</span>
+      <span class="status-monitors__when mono">${when}</span>
+    </li>`;
+  }
+
+  /** @param {string} s */
+  function escapeHtml(s) {
+    return s
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;");
+  }
+
+  async function load() {
+    const root = document.querySelector("[data-status-board]");
+    const listEl = document.querySelector("[data-status-list]");
+    const errEl = document.querySelector("[data-status-error]");
+    const metaEl = document.querySelector("[data-status-meta]");
+    const loadEl = document.querySelector(".status-board__loading");
+    if (!root || !listEl || !errEl || !metaEl) return;
+
+    try {
+      const r = await fetch("/api/status.json", { cache: "no-store" });
+      const data = await r.json();
+      if (!r.ok) {
+        throw new Error(data.error || `HTTP ${r.status}`);
+      }
+
+      if (loadEl) loadEl.hidden = true;
+      errEl.hidden = true;
+      listEl.hidden = false;
+
+      const fleet = data.fleet;
+      const fleetLine = fleet
+        ? `${fleet.allOperational ? "All systems operational" : "Some systems need attention"} · last cron ${relTime(fleet.time)} (${escapeHtml(fleet.loc)})`
+        : "Fleet status";
+
+      const lead = document.querySelector("[data-status-lead]");
+      if (lead) {
+        lead.innerHTML = `<span class="status-board__prompt"># </span>${fleetLine}`;
+      }
+
+      listEl.innerHTML = (data.monitors || []).map(rowHtml).join("");
+
+      metaEl.hidden = false;
+      metaEl.textContent = `snapshot: ${relTime(data.fetchedAt)} · source: ${statusPageUrl}`;
+    } catch (e) {
+      if (loadEl) loadEl.hidden = true;
+      listEl.hidden = true;
+      errEl.hidden = false;
+      errEl.textContent =
+        e instanceof Error ? e.message : "Could not load status. Open the status page instead.";
+    }
+  }
+
+  load();
+  window.setInterval(load, POLL_MS);
+</script>

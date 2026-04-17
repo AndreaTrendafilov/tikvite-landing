@@ -1,14 +1,13 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
+import StatusBoard from "../components/StatusBoard.astro";
+import { notesSite } from "../data/notes";
+
+export const prerender = true;
 
 const chatUrl = "https://chat.tikvite.org";
 const statusUrl = "https://status.tikvite.org";
 const cloudUrl = "https://tikvite.org/underconstruction.html";
-
-const uptimeTikvite =
-  "https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2FAndreaTrendafilov%2Ftikvite-uptime%2Frefs%2Fheads%2Fmaster%2Fapi%2Ftikvite%2Fuptime-month.json&logoColor=black&labelColor=white&color=black";
-const uptimeChat =
-  "https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2FAndreaTrendafilov%2Ftikvite-uptime%2Frefs%2Fheads%2Fmaster%2Fapi%2Fchat%2Fuptime-month.json&logoColor=black&labelColor=white&color=black";
 ---
 
 <BaseLayout>
@@ -27,88 +26,164 @@ const uptimeChat =
 
   <section class="section" id="about" aria-labelledby="about-heading">
     <h2 id="about-heading">About</h2>
-    <div class="tkv-card">
-      <p class="prompt">[root@tikvite:~]$ cat about</p>
-      <p>
-        Tikvite is an open-source, decentralized platform designed to provide secure communication for
-        individuals.
-      </p>
+    <div class="tkv-term">
+      <div class="tkv-term__chrome">
+        <span class="tkv-term__dots" aria-hidden="true">
+          <span class="tkv-term__dot tkv-term__dot--close"></span>
+          <span class="tkv-term__dot tkv-term__dot--min"></span>
+          <span class="tkv-term__dot tkv-term__dot--max"></span>
+        </span>
+        <span class="tkv-term__label">about — bash</span>
+      </div>
+      <div class="tkv-term__body">
+        <p class="prompt">[root@tikvite:~]$ cat about</p>
+        <pre class="term-output">Tikvite is an open-source, decentralized platform designed to provide secure communication for individuals.</pre>
+      </div>
     </div>
   </section>
 
   <section class="section" id="chat" aria-labelledby="chat-heading">
     <h2 id="chat-heading">Chat</h2>
-    <div class="tkv-card">
-      <h3 class="tkv-card__title">
-        <a href={chatUrl} target="_blank" rel="noreferrer">
-          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
-          </svg>
-          CHAT
-        </a>
-      </h3>
-      <ul>
-        <li>End-to-end encrypted messaging</li>
-        <li>Peer-to-peer video and voice calls</li>
-        <li>Data ownership and privacy</li>
-        <li>Cross-platform compatibility</li>
-      </ul>
+    <div class="tkv-term">
+      <div class="tkv-term__chrome">
+        <span class="tkv-term__dots" aria-hidden="true">
+          <span class="tkv-term__dot tkv-term__dot--close"></span>
+          <span class="tkv-term__dot tkv-term__dot--min"></span>
+          <span class="tkv-term__dot tkv-term__dot--max"></span>
+        </span>
+        <span class="tkv-term__label">chat — zsh</span>
+      </div>
+      <div class="tkv-term__body">
+        <p class="prompt">[root@tikvite:~]$ ./features --section chat</p>
+        <h3 class="tkv-term__title">
+          <a href={chatUrl} target="_blank" rel="noreferrer">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+            </svg>
+            CHAT
+          </a>
+        </h3>
+        <div class="term-output">
+          <ul class="term-lines">
+            <li>End-to-end encrypted messaging</li>
+            <li>Peer-to-peer video and voice calls</li>
+            <li>Data ownership and privacy</li>
+            <li>Cross-platform compatibility</li>
+          </ul>
+        </div>
+      </div>
     </div>
   </section>
 
   <section class="section" id="cloud" aria-labelledby="cloud-heading">
     <h2 id="cloud-heading">Cloud</h2>
-    <div class="tkv-card">
-      <h3 class="tkv-card__title">
-        <a href={cloudUrl} target="_blank" rel="noreferrer">
-          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-            <path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"></path>
-          </svg>
-          CLOUD
-        </a>
-      </h3>
-      <ul>
-        <li>Under construction</li>
-        <li>Access your files securely</li>
-        <li>Collaboration across desktop, mobile, and web</li>
-      </ul>
+    <div class="tkv-term">
+      <div class="tkv-term__chrome">
+        <span class="tkv-term__dots" aria-hidden="true">
+          <span class="tkv-term__dot tkv-term__dot--close"></span>
+          <span class="tkv-term__dot tkv-term__dot--min"></span>
+          <span class="tkv-term__dot tkv-term__dot--max"></span>
+        </span>
+        <span class="tkv-term__label">cloud — bash</span>
+      </div>
+      <div class="tkv-term__body">
+        <p class="prompt">[root@tikvite:~]$ ./features --section cloud</p>
+        <h3 class="tkv-term__title">
+          <a href={cloudUrl} target="_blank" rel="noreferrer">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"></path>
+            </svg>
+            CLOUD
+          </a>
+        </h3>
+        <div class="term-output">
+          <ul class="term-lines">
+            <li>Under construction</li>
+            <li>Access your files securely</li>
+            <li>Collaboration across desktop, mobile, and web</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="notes" aria-labelledby="notes-heading">
+    <h2 id="notes-heading">Notes</h2>
+    <div class="tkv-term">
+      <div class="tkv-term__chrome">
+        <span class="tkv-term__dots" aria-hidden="true">
+          <span class="tkv-term__dot tkv-term__dot--close"></span>
+          <span class="tkv-term__dot tkv-term__dot--min"></span>
+          <span class="tkv-term__dot tkv-term__dot--max"></span>
+        </span>
+        <span class="tkv-term__label">notes — README</span>
+      </div>
+      <div class="tkv-term__body">
+        <p class="prompt">[root@tikvite:~]$ cat NOTES.md</p>
+        <pre class="term-output term-output--readme">{`# Notes
+
+Field notes on shipping and operating platforms — practical write-ups, not slide decks.
+
+What you’ll find:
+  · Azure, AKS, Terraform, and CI/CD pipelines
+  · Observability, benchmarks, and when AI workloads meet production
+  · Side projects: edge, chat integrations, and local models
+
+Updates are irregular — posts show up when something is worth writing down.
+`}</pre>
+        <p class="readme-more">
+          <a href={notesSite} target="_blank" rel="noreferrer" title="Opens the technical notes site in a new tab">
+            Read notes →
+          </a>
+        </p>
+      </div>
     </div>
   </section>
 
   <section class="section" id="status" aria-labelledby="status-heading">
     <h2 id="status-heading">Status</h2>
-    <div class="tkv-card">
-      <h3 class="tkv-card__title">
-        <a href={statusUrl} target="_blank" rel="noreferrer">
-          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-            <path d="M22 12h-4l-3 9L9 3l-3 9H2"></path>
-          </svg>
-          Service status
-        </a>
-      </h3>
-      <p>Live uptime for core services.</p>
-      <ul class="badge-row">
-        <li>
-          <strong>Tikvite</strong>
-          <img src={uptimeTikvite} width="140" height="20" alt="Tikvite monthly uptime" loading="lazy" />
-        </li>
-        <li>
-          <strong>Chat</strong>
-          <img src={uptimeChat} width="140" height="20" alt="Chat monthly uptime" loading="lazy" />
-        </li>
-      </ul>
+    <div class="tkv-term">
+      <div class="tkv-term__chrome">
+        <span class="tkv-term__dots" aria-hidden="true">
+          <span class="tkv-term__dot tkv-term__dot--close"></span>
+          <span class="tkv-term__dot tkv-term__dot--min"></span>
+          <span class="tkv-term__dot tkv-term__dot--max"></span>
+        </span>
+        <span class="tkv-term__label">status — bash</span>
+      </div>
+      <div class="tkv-term__body">
+        <p class="prompt">[root@tikvite:~]$ curl -s status.tikvite.org | jq .</p>
+        <h3 class="tkv-term__title">
+          <a href={statusUrl} target="_blank" rel="noreferrer">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <path d="M22 12h-4l-3 9L9 3l-3 9H2"></path>
+            </svg>
+            monitors.json
+          </a>
+        </h3>
+        <StatusBoard />
+      </div>
     </div>
   </section>
 
   <section class="section" id="get-started" aria-labelledby="get-started-heading">
     <h2 id="get-started-heading">Get started</h2>
-    <div class="tkv-card">
-      <p>
-        Experience the next level of secure communication. Open Chat to try Tikvite and join the community.
-      </p>
-      <div class="cta-row">
-        <a class="btn btn--primary" href={chatUrl} target="_blank" rel="noreferrer">Launch Chat</a>
-        <a class="btn" href={statusUrl} target="_blank" rel="noreferrer">Check status</a>
+    <div class="tkv-term">
+      <div class="tkv-term__chrome">
+        <span class="tkv-term__dots" aria-hidden="true">
+          <span class="tkv-term__dot tkv-term__dot--close"></span>
+          <span class="tkv-term__dot tkv-term__dot--min"></span>
+          <span class="tkv-term__dot tkv-term__dot--max"></span>
+        </span>
+        <span class="tkv-term__label">readme — bash</span>
+      </div>
+      <div class="tkv-term__body">
+        <p class="prompt">[root@tikvite:~]$ cat GET_STARTED.md</p>
+        <pre class="term-output">Experience the next level of secure communication. Open Chat to try Tikvite and join the community.</pre>
+        <div class="cta-row">
+          <a class="btn btn--primary" href={chatUrl} target="_blank" rel="noreferrer">Launch Chat</a>
+          <a class="btn" href={statusUrl} target="_blank" rel="noreferrer">Check status</a>
+        </div>
       </div>
     </div>
   </section>
